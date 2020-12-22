@@ -22,3 +22,8 @@ C:\Users\justd\source\repos\ConvertExcel\bin\Debug\NPOI.OOXML.xml
 C:\Users\justd\source\repos\ConvertExcel\bin\Debug\NPOI.OpenXml4Net.xml
 C:\Users\justd\source\repos\ConvertExcel\obj\Debug\ConvertExcel.csproj.CopyComplete
 C:\Users\justd\source\repos\ConvertExcel\bin\Debug\SafeQueue.dll
+C:\Users\justd\source\repos\ConvertExcel\bin\Debug\LinqToExcel.dll
+C:\Users\justd\source\repos\ConvertExcel\bin\Debug\Remotion.Data.Linq.dll
+C:\Users\justd\source\repos\ConvertExcel\bin\Debug\Remotion.dll
+C:\Users\justd\source\repos\ConvertExcel\bin\Debug\Remotion.Interfaces.dll
+C:\Users\justd\source\repos\ConvertExcel\bin\Debug\LinqToExcel.xml

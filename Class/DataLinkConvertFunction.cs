@@ -3,6 +3,8 @@ using NPOI.XSSF.UserModel;
 using System;
 using System.IO;
 
+using Excel = Microsoft.Office.Interop.Excel;
+
 namespace ConvertExcel.Class
 {
     class DataLinkConvertFunction
@@ -17,7 +19,7 @@ namespace ConvertExcel.Class
             }
 
             // 活頁簿轉換成對應類別內容
-            string code = ConvertDataLink(workbook);
+            string code = ConvertDataLink(workbook, sourcePath);
 
             // 寫檔
             WriteToFile(code);
@@ -54,11 +56,28 @@ namespace ConvertExcel.Class
             }
         }
 
-        private static string ConvertDataLink(XSSFWorkbook workbook)
+        private static string ConvertDataLink(XSSFWorkbook workbook, string source)
         {
-            ISheet sheet = workbook.GetSheetAt(3);
-            SHM.QueueWriteSystemLog.Enqueue(sheet.SheetName);
-            System.Diagnostics.Debug.WriteLine(sheet.SheetName);
+            //ISheet sheet = workbook.GetSheetAt(3);
+            Excel.Application _Excel = null;
+            string pFileName = source;
+
+            Excel.Workbook book = null;
+            Excel.Worksheet sheet = null;
+            Excel.Range range = null;
+
+            book = _Excel.Workbooks.Open(pFileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);//開啟舊檔案
+            sheet = (Excel.Worksheet)book.Sheets[1];
+            range = sheet.get_Range("A1", "A10");
+
+            foreach (Excel.Range item in range)
+            {
+                string strData = string.Format("[{0},{1}] = {2}", item.Cells.Column, item.Cells.Row, item.Cells.Text);
+                System.Diagnostics.Debug.WriteLine(strData);
+            }
+
+            //SHM.QueueWriteSystemLog.Enqueue(sheet.SheetName);
+            //System.Diagnostics.Debug.WriteLine(sheet.SheetName);
             return null;
         }
 
