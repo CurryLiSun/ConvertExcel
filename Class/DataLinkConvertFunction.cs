@@ -11,73 +11,35 @@ namespace ConvertExcel.Class
     {
         public static void ExportDataLinkFile(string sourcePath)
         {
-            XSSFWorkbook workbook = GetWorkbook(sourcePath);
-            // 無法正常取得 Workbook 物件
-            if (workbook == null)
-            {
-                return;
-            }
-
-            // 活頁簿轉換成對應類別內容
-            string code = ConvertDataLink(workbook, sourcePath);
-
+            //ConvertDataLink
+            string code = ConvertDataLink(sourcePath);
             // 寫檔
             WriteToFile(code);
         }
 
-        private static XSSFWorkbook GetWorkbook(string sourcePath)
-        {
-            // 判斷路徑下檔案是否存在
-            if (!File.Exists(sourcePath))
-            {
-                SHM.QueueWriteSystemLog.Enqueue("檔案不存在");
-                return null;
-            }
-
-            try
-            {
-                using (FileStream fs = new FileStream(sourcePath, FileMode.Open, FileAccess.Read))
-                {
-                    try
-                    {
-                        return new XSSFWorkbook(fs);
-                    }
-                    catch (FileNotFoundException ex)
-                    {
-                        SHM.QueueWriteSystemLog.Enqueue("不是合法的 excel 檔案");
-                        return null;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                SHM.QueueWriteSystemLog.Enqueue("檔案已被其他應用程式開啟，請先關閉");
-                return null;
-            }
-        }
-
-        private static string ConvertDataLink(XSSFWorkbook workbook, string source)
+        private static string ConvertDataLink(string source)
         {
             //ISheet sheet = workbook.GetSheetAt(3);
-            Excel.Application _Excel = null;
+            Excel.Application _Excel = new Excel.Application();
             string pFileName = source;
 
             Excel.Workbook book = null;
             Excel.Worksheet sheet = null;
             Excel.Range range = null;
 
-            book = _Excel.Workbooks.Open(pFileName, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing, Type.Missing);//開啟舊檔案
-            sheet = (Excel.Worksheet)book.Sheets[1];
-            range = sheet.get_Range("A1", "A10");
+            book = _Excel.Workbooks.Open(pFileName);//開啟舊檔案
+            sheet = (Excel.Worksheet)book.Sheets[3];
+            range = sheet.get_Range("A1", "A50");
 
             foreach (Excel.Range item in range)
             {
                 string strData = string.Format("[{0},{1}] = {2}", item.Cells.Column, item.Cells.Row, item.Cells.Text);
                 System.Diagnostics.Debug.WriteLine(strData);
             }
-
             //SHM.QueueWriteSystemLog.Enqueue(sheet.SheetName);
             //System.Diagnostics.Debug.WriteLine(sheet.SheetName);
+            book.Close();
+            _Excel.Quit();
             return null;
         }
 
